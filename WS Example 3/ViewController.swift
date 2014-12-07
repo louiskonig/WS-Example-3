@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController{
     
-    @IBOutlet weak var myNameLabel: UILabel!
+    @IBOutlet weak var myNameLabel: LTMorphingLabel!
     
     
     required init(coder aDecoder: NSCoder) {
@@ -35,6 +35,8 @@ class ViewController: UIViewController{
                 
                 if let myName = responseObject.valueForKey("name") as? String {
                     
+                    
+                    self.myNameLabel.morphingEffect = .Sparkle
                     self.myNameLabel.text = myName
                     activityIndictorView.stopAnimating()
                     
@@ -46,8 +48,7 @@ class ViewController: UIViewController{
                             println("Animation complete!") })
                     
                     
-                    
-                    // self.myNameLabel.morphingEffect = .Sparkle
+                  
                 }
                 
             },
