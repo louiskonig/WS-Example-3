@@ -8,10 +8,52 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+class ViewController: UIViewController{
+    
+    @IBOutlet weak var myNameLabel: UILabel!
+    
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.myNameLabel.alpha = 0.0 //Hide The label until we get the data 
+        let activityIndictorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        activityIndictorView.center = self.view.center
+        self.view.addSubview(activityIndictorView)
+        activityIndictorView.startAnimating()
+        
+        let manager = AFHTTPRequestOperationManager()
+        
+        manager.GET( "http:/graph.facebook.com/louiskonig",
+            parameters: nil,
+            success: { (operation: AFHTTPRequestOperation!,responseObject: AnyObject!) in
+                println("JSON: " + responseObject.description)
+                
+                if let myName = responseObject.valueForKey("name") as? String {
+                    
+                    self.myNameLabel.text = myName
+                    activityIndictorView.stopAnimating()
+                    
+                    
+                    UIView.animateWithDuration(1.0, animations: {
+                        self.myNameLabel.alpha = 1.0
+                        }, completion: {
+                            (value: Bool) in
+                            println("Animation complete!") })
+                    
+                    
+                    
+                    // self.myNameLabel.morphingEffect = .Sparkle
+                }
+                
+            },
+            failure: { (operation: AFHTTPRequestOperation!,error: NSError!) in
+                println("Error: " + error.localizedDescription)
+        })
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -21,5 +63,12 @@ class ViewController: UIViewController {
     }
 
 
+    
+    
+    
+
+    
+   
+    
 }
 
